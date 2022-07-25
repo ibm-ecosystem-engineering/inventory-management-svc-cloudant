@@ -5,11 +5,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.UUID;
+
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.Database;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,45 @@ public class StockItemService implements StockItemApi {
 
     } catch (IOException e) {
       throw new Exception("", e);
+    }
+  }
+
+  @Override
+  public void addStockItem(String name, Double price, Integer stock, String manufacturer) throws Exception {
+    try {
+      db.save(new StockItem(UUID.randomUUID().toString())
+              .withName(name)
+              .withPrice(price)
+              .withStock(stock)
+              .withManufacturer(manufacturer)
+      );
+    } catch (Exception e) {
+      throw new Exception("",e);
+    }
+  }
+
+  @Override
+  public void updateStockItem(String id, String name, Double price, Integer stock, String manufacturer) throws Exception {
+    try {
+      StockItem itemToUpdate = db.find(StockItem.class,id);
+
+      itemToUpdate.setName(name !=null ? name : itemToUpdate.getName());
+      itemToUpdate.setManufacturer(manufacturer != null ? manufacturer : itemToUpdate.getManufacturer());
+      itemToUpdate.setPrice(price != null ? price : itemToUpdate.getPrice());
+      itemToUpdate.setStock(stock != null ? stock : itemToUpdate.getStock());
+
+      db.update(itemToUpdate);
+    } catch (Exception e ){
+      throw new Exception("", e);
+    }
+  }
+
+  @Override
+  public void deleteStockItem(String id) throws Exception {
+    try {
+      db.remove(db.find(StockItem.class,id));
+    } catch (Exception e){
+      throw new Exception("",e);
     }
   }
 }

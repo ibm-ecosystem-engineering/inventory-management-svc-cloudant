@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public class StockItem implements Serializable {
   private String name;
-  private String id = null;
+  private String _id = null;
+
+  private String _rev = null;
   private int stock = 0;
   private double price = 0.0;
   private String manufacturer = "";
@@ -14,7 +16,7 @@ public class StockItem implements Serializable {
   }
 
   public StockItem(String id) {
-    this.id = id;
+    this._id = id;
   }
 
   public String getName() {
@@ -31,11 +33,11 @@ public class StockItem implements Serializable {
   }
 
   public String getId() {
-    return id;
+    return _id;
   }
 
   public void setId(String id) {
-    this.id = id;
+    this._id = id;
   }
 
   public StockItem withId(String id) {
